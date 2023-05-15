@@ -1,0 +1,26 @@
+parameters:
+  - name: serviceConnection
+    type: string
+
+  - name: publishPlan
+    type: boolean
+    default: true
+
+jobs:
+- job: build
+  displayName: 'Build DSC modules'
+  steps:
+    - checkout: self
+    - task: AzurePowerShell@5
+      name: planStep
+      displayName: Plan
+      inputs:
+        azureSubscription: ${{ parameters.serviceConnection }}
+        pwsh: true
+        azurePowerShellVersion: LatestVersion
+        ScriptPath: "guest-configuration/Scripts/Build-GuestConfiguration.ps1"
+        ScriptArguments: 
+          -InformationAction Continue 
+    - publish: "$(DSC_OUTPUT_FOLDER)"
+      artifact: "DSC"
+      condition: and(succeeded(), eq('${{ parameters.publishPlan }}', 'true'))
