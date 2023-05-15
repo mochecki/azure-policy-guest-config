@@ -1,0 +1,52 @@
+name: $(BuildDefinitionName)-$(Rev:rrr)
+
+trigger: 
+  branches:
+    include:
+      - main
+
+pr: none
+
+variables: 
+  DSC_OUTPUT_FOLDER: ./guest-configuration/Output
+  DSC_DEFINITIONS_FOLDER: ./guest-configuration/DSC
+
+  kpmg_uk_ewt_prd_serviceConnection: 'sc-ewt-prd-policy-contrib'
+
+stages:
+  - stage: build
+    displayName: Build DSC packages
+    jobs:
+      - template: templates/job-build-DSC.yml
+        parameters:
+          serviceConnection: $(kpmg_uk_ewt_prd_serviceConnection)
+          publishPlan: false  
+  
+  - stage: deploy
+    displayName: Deploy DSC packages
+    dependsOn:
+      - build
+    condition: and(succeeded(), not(canceled()), eq(dependencies.planStage.outputs['kpmg_uk_ewt_dev_planJob.planStep.deployPolicyChanges'], 'yes'))
+    jobs:
+      - deployment: deploy
+          displayName: 'Deploy DSC packages'
+          environment: pac-policy-${{ parameters.environment }}
+          variables:
+            DSC_INPUT_FOLDER: "$(Pipeline.Workspace)"
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                  - checkout: self
+                  - download: current
+                    artifact: DSC
+                  - task: AzurePowerShell@5
+                    name: deployStep
+                    displayName: Deploy
+                    inputs:
+                      azureSubscription: ${{ parameters.serviceConnection }}
+                      pwsh: true
+                      azurePowerShellVersion: LatestVersion
+                      ScriptPath: "guest-configuration/Scripts/Deploy-GuestConfiguration.ps1" 
+                      ScriptArguments: 
+                        -InformationAction Continue

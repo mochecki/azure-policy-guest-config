@@ -1,0 +1,21 @@
+name: $(Build.DefinitionName)-$(SourceBranchName)-$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger: none
+
+variables: 
+  DSC_OUTPUT_FOLDER: ./guest-configuration/Output
+  DSC_DEFINITIONS_FOLDER: ./guest-configuration/DSC
+
+  kpmg_uk_ewt_prd_serviceConnection: 'sc-ewt-prd-policy-contrib'
+
+pool:
+  vmImage: 'windows-latest'
+
+stages:
+  - stage: build
+    displayName: Build
+    jobs:
+      - template: templates/job-build-DSC.yml
+        parameters:
+          serviceConnection: $(kpmg_uk_ewt_prd_serviceConnection)
+          publishPlan: false  
