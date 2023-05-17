@@ -11,15 +11,15 @@ jobs:
   displayName: 'Build DSC modules'
   steps:
     - checkout: self
-    - task: Powershell@2
-      name: installModulesStep
-      displayName: Install modules
-      inputs:
-        targetType: inline
-        script: |
-          Install-Module PSDesiredStateConfiguration -Force
-          Install-Module PSDscResources -Force
-          Install-Module GuestConfiguration -Force 
+    # - task: Powershell@2
+    #   name: installModulesStep
+    #   displayName: Install modules
+    #   inputs:
+    #     targetType: inline
+    #     script: |
+    #       Install-Module PSDesiredStateConfiguration -Force
+    #       Install-Module PSDscResources -Force
+    #       Install-Module GuestConfiguration -Force 
 
     - task: Powershell@2
       name: buildStep
@@ -29,7 +29,7 @@ jobs:
         filePath: "Scripts/Build-GuestConfiguration.ps1"
         arguments: 
           -InformationAction Continue 
-          
+
     - publish: "$(DSC_OUTPUT_FOLDER)"
       artifact: "DSC"
       condition: and(succeeded(), eq('${{ parameters.publishPlan }}', 'true'))
