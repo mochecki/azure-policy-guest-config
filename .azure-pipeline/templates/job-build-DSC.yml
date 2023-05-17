@@ -18,7 +18,7 @@ jobs:
         azureSubscription: ${{ parameters.serviceConnection }}
         pwsh: true
         azurePowerShellVersion: LatestVersion
-        ScriptPath: "guest-configuration/Scripts/Build-GuestConfiguration.ps1"
+        ScriptPath: "Scripts/Build-GuestConfiguration.ps1"
         ScriptArguments: 
           -InformationAction Continue 
     - publish: "$(DSC_OUTPUT_FOLDER)"

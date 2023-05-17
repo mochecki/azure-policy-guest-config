@@ -60,11 +60,8 @@ foreach ($configuration in $configurations) {
     Write-Information "- Configuration: $($configuration.name)  Version: $($configuration.version)"
 
     $configurationFolder = Join-Path $folders.definitionsRootFolder $configuration.name
-    $configurationScript = Join-Path $configurationFolder $configuration.file
+    $configurationScript = Join-Path $configurationFolder $configuration.name ".ps1"
     if (Test-Path $configurationScript) {
-
-
-
         $null = . $configurationScript
         $compileOutput = & $configuration.name -OutputPath $configurationFolder
         $configuration | Add-Member -NotePropertyName "MOF" -NotePropertyValue $compileOutput
