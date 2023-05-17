@@ -51,5 +51,5 @@ stages:
                     ScriptPath: "Scripts/Deploy-GuestConfiguration.ps1" 
                     ScriptArguments: 
                       -storageAccountName stmockpmgtfdev001
-                      -containerName guestconfig
+                      -storageContainerName guestconfig
                       -InformationAction Continue

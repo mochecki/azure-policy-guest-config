@@ -39,22 +39,27 @@ $configurations = Get-Configurations $folders.outputConfigurationFile
 Write-Information "Configuration counts: $($configurations.Count)"
 Write-Information ""
 
+Write-Information "Connecting to $storageAccountName..."
+# Connect to Azure Storage Account
+$storageAccount = Get-AzStorageAccount -Name $storageAccountName
+$storageContext = $storageAccount.Context
+
+Write-Information "Checking if $storageContainerName container exists..."
+# Check if the storage container exists, create it if necessary
+if (!(Get-AzStorageContainer -Name $storageContainerName -Context $storageContext -ErrorAction SilentlyContinue)) {
+    Write-Information "$storageContainerName does not exists... creating"
+    New-AzStorageContainer -Name $storageContainerName -Context $storageContext -Permission Blob
+
+    Write-Information "$storageContainerName created successfully."
+} else {
+    Write-Information "$storageContainerName container already exists in $storageAccountName. Skipping creation."
+}
 
 Write-Information ""
 Write-Information "==================================================================================================="
 Write-Information "Processing $($configurations.Count) configurations"
 Write-Information "==================================================================================================="
 Write-Information ""
-
-
-# Connect to Azure Storage Account
-$storageAccount = Get-AzStorageAccount -Name $storageAccountName
-$storageContext = $storageAccount.Context
-
-# Check if the storage container exists, create it if necessary
-if (!(Get-AzStorageContainer -Name $storageContainerName -Context $storageContext -ErrorAction SilentlyContinue)) {
-    New-AzStorageContainer -Name $storageContainerName -Context $storageContext -Permission Blob
-}
 
 foreach ($configuration in $configurations) {
     
