@@ -60,42 +60,16 @@ foreach ($configuration in $configurations) {
     
     Write-Information "- Configuration: $($configuration.name)  Version: $($configuration.version)"
 
-    $blobName = $artifact.Name
-    $blobPath = "$($artifact.Directory.Name)/$blobName"
-    $blobExists = (Get-AzStorageBlob -Container $storageContainerName -Context $storageContext -Blob $configuration.package -ErrorAction SilentlyContinue)
+    $file = Join-Path $folders.outputFolder $configuration.package
+    $blobName =  $configuration.name + '_' + ($configuration.version -replace '\.', '_') + '.zip'
+    $blobExists = (Get-AzStorageBlob -Container $storageContainerName -Context $storageContext -Blob $blobName -ErrorAction SilentlyContinue)
 
     if (!$blobExists) {
         Write-Host "Uploading $blobName to $storageContainerName..."
-        Set-AzStorageBlobContent -Container $storageContainerName -Context $storageContext -File $artifact.FullName -Blob $configuration.package
+        Set-AzStorageBlobContent -Container $storageContainerName -Context $storageContext -File $file -Blob $blobName
         Write-Host "$blobName uploaded successfully."
+
     } else {
         Write-Host "$blobName already exists in $storageContainerName. Skipping upload."
     }
-    
-    # If the blob does not exist, copy the file to the storage account
-    if (!$blobExists) {
-        Write-Host "Copying file $filePath to storage account..."
-        Set-AzStorageBlobContent -Context $context `
-                                    -Container $ContainerName `
-                                    -File $filePath `
-                                    -Blob $blobName `
-                                    -Force
-        Write-Host "File $filePath copied to storage account."
-    }
-    else {
-        Write-Host "File $filePath already exists in the storage account."
-    }
-
-    $PolicyConfig2      = @{
-        PolicyId      = [guid]::NewGuid()
-        ContentUri    = $contenturi
-        DisplayName   = $configuration.DisplayName
-        Description   = $configuration.Description
-        Path          = $folders.outputFolder
-        Platform      = 'Windows'
-        PolicyVersion = $configuration.version
-        Mode          = 'ApplyAndAutoCorrect'
-      }
-      
-    New-GuestConfigurationPolicy @PolicyConfig2
 }
