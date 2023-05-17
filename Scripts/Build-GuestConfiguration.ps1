@@ -23,9 +23,9 @@ param (
 
 $InformationPreference = 'Continue'
 
-Install-Module PSDesiredStateConfiguration -Force
-Install-Module PSDscResources -Force
-Install-Module GuestConfiguration -Force
+# Install-Module PSDesiredStateConfiguration -Force
+# Install-Module PSDscResources -Force
+# Install-Module GuestConfiguration -Force
 
 . "$PSScriptRoot/../customDscResources/DscNicNetbios/Helpers.ps1"
 . "$PSScriptRoot/../customDscResources/DscWindowsFeature/Helpers.ps1"

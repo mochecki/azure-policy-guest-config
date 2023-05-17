@@ -11,21 +11,23 @@ jobs:
   displayName: 'Build DSC modules'
   steps:
     - checkout: self
-    # - task: Powershell@2
-    #   name: installModulesStep
-    #   displayName: Install modules
-    #   inputs:
-    #     targetType: inline
-    #     script: |
-    #       Install-Module PSDesiredStateConfiguration -Force
-    #       Install-Module PSDscResources -Force
-    #       Install-Module GuestConfiguration -Force 
+    - task: Powershell@2
+      name: installModulesStep
+      displayName: Install modules
+      inputs:
+        targetType: inline
+        pwsh: true
+        script: |
+          Install-Module PSDesiredStateConfiguration -Force
+          Install-Module PSDscResources -Force
+          Install-Module GuestConfiguration -Force 
 
     - task: Powershell@2
       name: buildStep
       displayName: Build DSC packages
       inputs:
         targetType: 'filePath'
+        pwsh: true
         filePath: "Scripts/Build-GuestConfiguration.ps1"
         arguments: 
           -InformationAction Continue 
