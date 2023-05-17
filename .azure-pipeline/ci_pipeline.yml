@@ -3,8 +3,8 @@ name: $(Build.DefinitionName)-$(SourceBranchName)-$(Date:yyyyMMdd)$(Rev:.r)
 trigger: none
 
 variables: 
-  DSC_OUTPUT_FOLDER: ./guest-configuration/Output
-  DSC_DEFINITIONS_FOLDER: ./guest-configuration/DSC
+  DSC_OUTPUT_FOLDER: ./Output
+  DSC_DEFINITIONS_FOLDER: ./DSC
 
   kpmg_uk_ewt_prd_serviceConnection: 'sc-epac-dev'
 
