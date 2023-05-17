@@ -48,7 +48,7 @@ stages:
                     azureSubscription: $(kpmg_uk_ewt_prd_serviceConnection)
                     pwsh: true
                     azurePowerShellVersion: LatestVersion
-                    ScriptPath: "guest-configuration/Scripts/Deploy-GuestConfiguration.ps1" 
+                    ScriptPath: "Scripts/Deploy-GuestConfiguration.ps1" 
                     ScriptArguments: 
                       -storageAccountName stmockpmgtfdev001
                       -containerName guestconfig

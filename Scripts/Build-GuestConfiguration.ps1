@@ -52,8 +52,10 @@ Write-Information "Processing $($configurations.Count) configurations"
 Write-Information "==================================================================================================="
 Write-Information ""
 
-
-$plan = [System.Collections.ArrayList]::new()
+$plan = @{
+    configurations = [System.Collections.ArrayList]::new()
+}
+# $plan = [System.Collections.ArrayList]::new()
 
 foreach ($configuration in $configurations) {
     
@@ -75,7 +77,7 @@ foreach ($configuration in $configurations) {
             type    = $configuration.type
             package = Split-Path $package.Path -Leaf
         } 
-        $null = $plan.Add($addedEntry)
+        $null = $plan.configurations.Add($addedEntry)
 
     } else {
         Write-Warning "     [Warning] Path not found: $path"
@@ -84,7 +86,7 @@ foreach ($configuration in $configurations) {
 }
 
 $planFile =  "$($folders.outputFolder)/configuration-plan.json"
-if ($plan.Count -gt 0) {
+if ($plan.configurations.Count -gt 0) {
     Write-Information "   DSC package deployment required; writing Policy plan file '$planFile'"
     if (-not (Test-Path $planFile)) {
         $null = (New-Item $planFile -Force)
