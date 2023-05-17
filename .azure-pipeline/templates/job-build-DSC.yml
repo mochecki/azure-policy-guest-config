@@ -11,16 +11,25 @@ jobs:
   displayName: 'Build DSC modules'
   steps:
     - checkout: self
-    - task: AzurePowerShell@5
-      name: planStep
-      displayName: Plan
+    - task: Powershell@2
+      name: installModulesStep
+      displayName: Install modules
       inputs:
-        azureSubscription: ${{ parameters.serviceConnection }}
-        pwsh: true
-        azurePowerShellVersion: LatestVersion
-        ScriptPath: "Scripts/Build-GuestConfiguration.ps1"
-        ScriptArguments: 
+        targetType: inline
+        script: |
+          Install-Module PSDesiredStateConfiguration -Force
+          Install-Module PSDscResources -Force
+          Install-Module GuestConfiguration -Force 
+
+    - task: Powershell@2
+      name: buildStep
+      displayName: Build DSC packages
+      inputs:
+        targetType: 'filePath'
+        filePath: "Scripts/Build-GuestConfiguration.ps1"
+        arguments: 
           -InformationAction Continue 
+          
     - publish: "$(DSC_OUTPUT_FOLDER)"
       artifact: "DSC"
       condition: and(succeeded(), eq('${{ parameters.publishPlan }}', 'true'))

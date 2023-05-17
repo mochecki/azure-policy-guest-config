@@ -4,17 +4,17 @@
     "configurations": [
         {
             "name": "DisableMulticastNameResolution",
-            "type": "ApplyAndAutoCorrect",
+            "type": "AuditAndSet",
             "version": "0.0.1"
         },
         {
             "name": "InstallLaps",
-            "type": "ApplyAndAutoCorrect",
+            "type": "AuditAndSet",
             "version": "0.0.1" 
         },
         {
             "name": "DisableNetbiosOnNic",
-            "type": "ApplyAndAutoCorrect",
+            "type": "AuditAndSet",
             "version": "0.0.1" 
         }
     ]
