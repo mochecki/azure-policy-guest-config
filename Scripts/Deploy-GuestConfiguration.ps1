@@ -16,6 +16,9 @@
 [CmdletBinding()]
 param (
     [Parameter(Mandatory=$true)]
+    [string] $storageResourceGroup,
+
+    [Parameter(Mandatory=$true)]
     [string] $storageAccountName,
 
     [Parameter(Mandatory=$true)]
@@ -41,7 +44,7 @@ Write-Information ""
 
 Write-Information "Connecting to $storageAccountName..."
 # Connect to Azure Storage Account
-$storageAccount = Get-AzStorageAccount -Name $storageAccountName
+$storageAccount = Get-AzStorageAccount -Name $storageAccountName -ResourceGroupName $storageResourceGroup
 $storageContext = $storageAccount.Context
 
 Write-Information "Checking if $storageContainerName container exists..."

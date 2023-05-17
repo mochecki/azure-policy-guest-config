@@ -51,6 +51,7 @@ stages:
                     azurePowerShellVersion: LatestVersion
                     ScriptPath: "Scripts/Deploy-GuestConfiguration.ps1" 
                     ScriptArguments: 
+                      -storageResourceGroup rg-kpmg-tfstate-we-001
                       -storageAccountName stmockpmgtfdev001
                       -storageContainerName guestconfig
                       -InformationAction Continue
