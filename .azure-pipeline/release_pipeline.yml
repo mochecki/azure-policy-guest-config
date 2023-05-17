@@ -34,6 +34,7 @@ stages:
         environment: DSC
         variables:
           DSC_INPUT_FOLDER: "$(Pipeline.Workspace)"
+          DSC_OUTPUT_FOLDER: "$(Pipeline.Workspace)/DSC"
         strategy:
           runOnce:
             deploy:

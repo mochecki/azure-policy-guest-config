@@ -31,7 +31,7 @@ $folders = Get-Folders
 
 Write-Information ""
 Write-Information "==================================================================================================="
-Write-Information "Read global settings from '$($folders.configurationFile)'."
+Write-Information "Read global settings from '$($folders.outputConfigurationFile)'."
 Write-Information "==================================================================================================="
 
 $configurations = Get-Configurations $folders.outputConfigurationFile
