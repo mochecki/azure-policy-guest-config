@@ -25,7 +25,7 @@ function Get-Folders {
         }
     }
     
-    $outputConfigurationFile = "$outputFolder/configuration-plan.jsonc"
+    $outputConfigurationFile = "$outputFolder/configuration-plan.json"
 
     if ($inputFolder -eq "") {
         if ($null -eq $env:DSC_INPUT_FOLDER) {
