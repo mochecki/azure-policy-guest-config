@@ -6,7 +6,7 @@ variables:
   DSC_OUTPUT_FOLDER: ./guest-configuration/Output
   DSC_DEFINITIONS_FOLDER: ./guest-configuration/DSC
 
-  kpmg_uk_ewt_prd_serviceConnection: 'sc-ewt-prd-policy-contrib'
+  kpmg_uk_ewt_prd_serviceConnection: 'sc-epac-dev'
 
 pool:
   vmImage: 'windows-latest'

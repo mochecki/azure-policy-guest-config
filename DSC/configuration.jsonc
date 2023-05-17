@@ -4,20 +4,17 @@
     "configurations": [
         {
             "name": "DisableMulticastNameResolution",
-            "file": "DisableMulticastNameResolution.ps1",
-            "type": "Audit",
+            "type": "ApplyAndAutoCorrect",
             "version": "0.0.1"
         },
         {
             "name": "InstallLaps",
-            "file": "InstallLaps.ps1",
-            "type": "Audit",
+            "type": "ApplyAndAutoCorrect",
             "version": "0.0.1" 
         },
         {
             "name": "DisableNetbiosOnNic",
-            "file": "DisableNetbiosOnNic.ps1",
-            "type": "Audit",
+            "type": "ApplyAndAutoCorrect",
             "version": "0.0.1" 
         }
     ]

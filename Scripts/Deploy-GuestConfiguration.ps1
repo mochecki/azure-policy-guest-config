@@ -15,6 +15,11 @@
 
 [CmdletBinding()]
 param (
+    [Parameter(Mandatory=$true)]
+    [string] $storageAccountName,
+
+    [Parameter(Mandatory=$true)]
+    [string] $storageContainerName
 )
 
 . "$PSScriptRoot/Helpers/Get-Folders.ps1"
@@ -42,17 +47,30 @@ Write-Information "=============================================================
 Write-Information ""
 
 
-$plan = [System.Collections.ArrayList]::new()
+# Connect to Azure Storage Account
+$storageAccount = Get-AzStorageAccount -Name $storageAccountName
+$storageContext = $storageAccount.Context
 
-$storageContext = ""
-$ContainerName = ""
+# Check if the storage container exists, create it if necessary
+if (!(Get-AzStorageContainer -Name $storageContainerName -Context $storageContext -ErrorAction SilentlyContinue)) {
+    New-AzStorageContainer -Name $storageContainerName -Context $storageContext -Permission Blob
+}
 
 foreach ($configuration in $configurations) {
     
     Write-Information "- Configuration: $($configuration.name)  Version: $($configuration.version)"
 
+    $blobName = $artifact.Name
+    $blobPath = "$($artifact.Directory.Name)/$blobName"
+    $blobExists = (Get-AzStorageBlob -Container $storageContainerName -Context $storageContext -Blob $configuration.package -ErrorAction SilentlyContinue)
 
-    $blobExists = Get-AzStorageBlob -Context $context -Container $ContainerName -Blob $configuration.package -ErrorAction SilentlyContinue
+    if (!$blobExists) {
+        Write-Host "Uploading $blobName to $storageContainerName..."
+        Set-AzStorageBlobContent -Container $storageContainerName -Context $storageContext -File $artifact.FullName -Blob $configuration.package
+        Write-Host "$blobName uploaded successfully."
+    } else {
+        Write-Host "$blobName already exists in $storageContainerName. Skipping upload."
+    }
     
     # If the blob does not exist, copy the file to the storage account
     if (!$blobExists) {
