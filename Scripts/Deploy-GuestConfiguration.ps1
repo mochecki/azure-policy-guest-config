@@ -65,6 +65,7 @@ Write-Information "=============================================================
 Write-Information ""
 
 $expiryTime = (Get-Date).AddYears(5)
+$policyStage = "no"
 
 foreach ($configuration in $configurations) {
     
@@ -96,7 +97,11 @@ foreach ($configuration in $configurations) {
           
         Write-Host "$blobName uploaded successfully."
 
+        $policyStage = "yes"
     } else {
         Write-Host "$blobName already exists in $storageContainerName. Skipping upload."
     }
 }
+
+Write-Host "##vso[task.setvariable variable=deployPolicy;isOutput=true]$($policyStage)"
+

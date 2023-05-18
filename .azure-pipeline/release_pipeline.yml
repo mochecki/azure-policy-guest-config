@@ -68,4 +68,6 @@ stages:
                       -InformationAction Continue
                 - publish: "./Output"
                   artifact: "Policies"
+                  condition: and(succeeded(), eq(variables['deployStep.deployPolicy'], 'yes'))
+
 
