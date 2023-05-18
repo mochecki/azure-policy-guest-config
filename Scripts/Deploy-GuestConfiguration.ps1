@@ -64,6 +64,8 @@ Write-Information "Processing $($configurations.Count) configurations"
 Write-Information "==================================================================================================="
 Write-Information ""
 
+$expiryTime = (Get-Date).AddYears(5)
+
 foreach ($configuration in $configurations) {
     
     Write-Information "- Configuration: $($configuration.name)  Version: $($configuration.version)"
@@ -75,6 +77,22 @@ foreach ($configuration in $configurations) {
     if (!$blobExists) {
         Write-Host "Uploading $blobName to $storageContainerName..."
         Set-AzStorageBlobContent -Container $storageContainerName -Context $storageContext -File $file -Blob $blobName
+
+        $sasToken = New-AzStorageBlobSASToken -Container $storageContainerName -Blob $blobName -Context $storageContext -Permission r -ExpiryTime $expiryTime
+        $blobUrl = $storageAccount.PrimaryEndpoints.Blob.ToString() + $storageContainerName + '/' + $blobName + $sasToken
+
+        $PolicyConfig      = @{
+            PolicyId      = [guid]::NewGuid().ToString()
+            ContentUri    = $blobUrl
+            DisplayName   = $configuration.name
+            Description   = $configuration.name
+            Path          = "./Output/$($configuration.name).json"
+            Platform      = 'Windows'
+            PolicyVersion = $configuration.version
+          }
+          
+        New-GuestConfigurationPolicy @PolicyConfig
+          
         Write-Host "$blobName uploaded successfully."
 
     } else {
