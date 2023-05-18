@@ -66,6 +66,6 @@ stages:
                       -storageAccountName stmockpmgtfdev001
                       -storageContainerName guestconfig
                       -InformationAction Continue
-                - publish: "$(Pipeline.Workspace)/Output"
+                - publish: "./Output"
                   artifact: "Policies"
 

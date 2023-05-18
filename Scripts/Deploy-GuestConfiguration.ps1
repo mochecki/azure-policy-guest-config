@@ -86,9 +86,10 @@ foreach ($configuration in $configurations) {
             ContentUri    = $blobUrl
             DisplayName   = $configuration.name
             Description   = $configuration.name
-            Path          = "./Output/$($configuration.name).json"
+            Path          = "./Output"
             Platform      = 'Windows'
             PolicyVersion = $configuration.version
+            Mode          = 'ApplyAndAutoCorrect'
           }
           
         New-GuestConfigurationPolicy @PolicyConfig
