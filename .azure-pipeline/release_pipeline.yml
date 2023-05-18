@@ -42,6 +42,17 @@ stages:
                 - checkout: self
                 - download: current
                   artifact: DSC
+                - task: Powershell@2
+                  name: installModulesStep
+                  displayName: Install modules
+                  inputs:
+                    targetType: inline
+                    pwsh: true
+                    script: |
+                      Install-Module PSDesiredStateConfiguration -Force
+                      Install-Module PSDscResources -Force
+                      Install-Module GuestConfiguration -Force    
+
                 - task: AzurePowerShell@5
                   name: deployStep
                   displayName: Deploy
